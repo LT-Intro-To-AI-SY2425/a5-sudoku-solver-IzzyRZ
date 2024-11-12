@@ -11,7 +11,7 @@ def remove_if_exists(lst: Any, elem: Any) -> None:
     Args:
         lst - the list you're trying to remove an item from
         elem - item to remove
-    """
+    """ 
     if isinstance(lst, list) and elem in lst:
         lst.remove(elem)
 
@@ -106,7 +106,20 @@ class Board:
         Returns:
             a tuple of row, column index identifying the most constrained cell
         """
-        pass
+        min = 9
+        r = -1
+        for row in self.rows:
+            for square in row:
+                c+=1
+                if len(square) < min:
+                    min = len(square)
+        for row in self.rows:
+            r+=1
+            c=-1
+            for square in row:
+                c+=1
+                if len(square) == min:
+                    return (r,c)
 
     def failure_test(self) -> bool:
         """Check if we've failed to correctly fill out the puzzle. If we find a cell
@@ -116,7 +129,11 @@ class Board:
         Returns:
             True if we have failed to fill out the puzzle, False otherwise
         """
-        pass
+        for row in self.rows:
+            for square in row:
+                if square == []:
+                    return True
+        return False
 
     def goal_test(self) -> bool:
         """Check if we've completed the puzzle (if we've placed all the numbers).
@@ -125,7 +142,11 @@ class Board:
         Returns:
             True if we've placed all numbers, False otherwise
         """
-        pass
+        for row in self.rows:
+            for square in row:
+                if type(square) == list:
+                    return False
+        return True 
 
     def update(self, row: int, column: int, assignment: int) -> None:
         """Assigns the given value to the cell given by passed in row and column
@@ -139,7 +160,12 @@ class Board:
             column - index of the column to assign
             assignment - value to place at given row, column coordinate
         """
-        pass
+        self.rows[row][column] = assignment
+        subgrid = self.subgrid_coordinates(row,column)
+        for i in range(self.size):
+            remove_if_exists(self.rows[row][i], assignment)
+            remove_if_exists(self.rows[i][column], assignment)
+            remove_if_exists(self.rows[subgrid[i][0]][subgrid[i][1]],assignment)
 
 
 def DFS(state: Board) -> Board:
