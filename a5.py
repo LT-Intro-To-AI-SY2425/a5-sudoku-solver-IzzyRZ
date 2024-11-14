@@ -119,7 +119,7 @@ class Board:
             for square in row:
                 c+=1
                 if len(square) == min:
-                    return (r,c)
+                    return tuple(r,c)
 
     def failure_test(self) -> bool:
         """Check if we've failed to correctly fill out the puzzle. If we find a cell
@@ -180,8 +180,12 @@ def DFS(state: Board) -> Board:
     Returns:
         either None in the case of invalid input or a solved board
     """
-    pass
-
+    testBoard = state
+    while not testBoard.goal_test:
+        targetCoordinates = testBoard.find_most_constrained_cell 
+        target = testBoard.rows[targetCoordinates[0]][targetCoordinates[1]]
+        if type(target) == list and len(target) == 1:
+            testBoard.update(targetCoordinates[0],targetCoordinates[1],target[0])
 
 def BFS(state: Board) -> Board:
     """Performs a breadth first search. Takes a Board and attempts to assign values to
